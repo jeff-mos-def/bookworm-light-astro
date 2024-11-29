@@ -5,18 +5,181 @@ import Pagination from "@/layouts/components/Pagination.astro";
 import Posts from "@/layouts/Posts.astro";
 import { getSinglePage } from "@/lib/contentParser.astro";
 import { sortByDate } from "@/lib/utils/sortFunctions";
+import { Image } from "astro:assets";
+import dateFormat from "@/lib/utils/dateFormat";
+import { humanize, markdownify, slugify } from "@/lib/utils/textConverter";
+import { BiCalendarEdit, BiCategoryAlt } from "react-icons/bi";
 
 const posts = await getSinglePage("posts");
 const sortedPosts = sortByDate(posts);
-const totalPages = Math.ceil(posts.length / config.settings.pagination);
-const currentPosts = sortedPosts.slice(0, config.settings.pagination);
+const itemsPerPage = config.settings.pagination;
+const currentPage = 1;
+const totalPages = Math.ceil(posts.length / itemsPerPage);
+const currentPosts = sortedPosts.slice(0, itemsPerPage);
 ---
 
 <Base>
+  
+  {/* Welcome Section */}
+  <section class="welcome-section bg-gray-100 py-10">
+    <div class="container text-center">
+      <h1 class="text-3xl font-bold mb-4">Welcome to Bookworm</h1>
+      <p class="text-gray-600 text-lg">
+        Bookworm is your go-to destination for engaging articles on lifestyle, food, art, and more.
+        Explore our carefully curated content and find your next inspiration.
+      </p>
+    </div>
+  </section>
+  
   <section class="section">
     <div class="container">
-      <Posts posts={currentPosts} className="mb-16" />
-      <Pagination currentPage={1} totalPages={totalPages} />
+      {currentPage === 1 && currentPosts.length > 0 && (
+        <>
+          {/* Featured Post */}
+          <article class="featured-post mb-8">
+            <div class="post-card">
+              <a href={`/${currentPosts[0].slug}`} class="block hover:text-primary">
+                {currentPosts[0].data.image && (
+                  <div class="post-image mb-6">
+                    <Image
+                      src={currentPosts[0].data.image}
+                      height={500}
+                      width={1000}
+                      alt={currentPosts[0].data.title}
+                      class="rounded-lg w-full object-cover"
+                    />
+                  </div>
+                )}
+              </a>
+
+              <div class="meta-info flex items-center mb-4">
+                {/* Author with Icon */}
+                <a href={`/authors/${slugify(currentPosts[0].data.authors[0])}`} class="flex items-center hover:text-primary font-medium">
+                  <img
+                    src={`/images/authors/${slugify(currentPosts[0].data.authors[0])}.jpg`}
+                    alt={currentPosts[0].data.authors[0]}
+                    class="mr-2 h-6 w-6 rounded-full"
+                  />
+                  <span>{currentPosts[0].data.authors[0]}</span>
+                </a>
+
+                {/* Date */}
+                <span class="date mx-2 flex items-center">
+                  <BiCalendarEdit className="inline mr-1" />
+                  {dateFormat(currentPosts[0].data.date)}
+                </span>
+
+                {/* Categories */}
+                <span class="flex items-center">
+                  <BiCategoryAlt className="inline mx-1" />
+                  {currentPosts[0].data.categories.map((category: string) => (
+                    <a href={`/categories/${slugify(category)}`} class="hover:text-primary mr-2">
+                      {humanize(category)}
+                    </a>
+                  ))}
+                </span>
+              </div>
+
+              {/* Title */}
+              <h1 class="text-2xl font-bold mb-4">
+                <a href={`/${currentPosts[0].slug}`} class="hover:text-primary">
+                  {currentPosts[0].data.title}
+                </a>
+              </h1>
+
+              {/* Description */}
+              <p class="text-gray-600">{currentPosts[0].data.description}</p>
+            </div>
+          </article>
+
+          {/* Featured Post Information */}
+          <div class="featured-info bg-gray-50 p-6 rounded-lg mb-12">
+            <p class="text-gray-600">Featured post information here...</p>
+          </div>
+
+          {/* Remaining Posts */}
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mb-8">
+            {currentPosts.slice(1).map((post) => (
+              <div class="post-card">
+                <a href={`/${post.slug}`} class="hover:text-primary">
+                  {post.data.image && (
+                    <img
+                      src={post.data.image}
+                      alt={post.data.title}
+                      class="rounded-lg w-full object-cover mb-4"
+                      width={500}
+                      height={250}
+                    />
+                  )}
+                  <h3 class="text-xl font-semibold">{post.data.title}</h3>
+                  <p class="text-gray-600">{post.data.description}</p>
+                </a>
+
+                {/* Metadata */}
+                <div class="meta-info flex items-center mt-2">
+                  {/* Author */}
+                  <a href={`/authors/${slugify(post.data.authors[0])}`} class="flex items-center hover:text-primary font-medium">
+                    <img
+                      src={`/images/authors/${slugify(post.data.authors[0])}.jpg`}
+                      alt={post.data.authors[0]}
+                      class="mr-2 h-6 w-6 rounded-full"
+                    />
+                    <span>{post.data.authors[0]}</span>
+                  </a>
+
+                  {/* Date */}
+                  <span class="date mx-2 flex items-center">
+                    <BiCalendarEdit className="inline mr-1" />
+                    {dateFormat(post.data.date)}
+                  </span>
+
+                  {/* Categories */}
+                  <span class="flex items-center">
+                    <BiCategoryAlt className="inline mx-1" />
+                    {post.data.categories.map((category: string) => (
+                      <a href={`/categories/${slugify(category)}`} class="hover:text-primary mr-2">
+                        {humanize(category)}
+                      </a>
+                    ))}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+
+      {/* Pagination */}
+      <Pagination currentPage={currentPage} totalPages={totalPages} />
     </div>
   </section>
 </Base>
+
+<style>
+  .post-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .featured-post .post-card {
+    max-height: none;
+  }
+
+  .grid .post-card {
+    max-height: 400px;
+  }
+
+  .meta-info {
+    font-size: 0.875rem;
+    color: #555;
+  }
+
+  .meta-info a {
+    text-decoration: none;
+  }
+
+  .meta-info img {
+    border-radius: 50%;
+  }
+</style>

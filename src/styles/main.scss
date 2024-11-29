@@ -16,3 +16,28 @@
 @layer utilities {
   @include meta.load-css("utilities");
 }
+
+.first-post article {
+  margin-bottom: 2rem;
+}
+
+.site-overview {
+  background-color: #f9f9f9;
+  padding: 2rem;
+  border-radius: 8px;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.other-posts {
+  margin-top: 2rem;
+}
+
+.info-block {
+  background-color: #e0f2fe;
+  padding: 2rem;
+  border-radius: 8px;
+  text-align: center;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}

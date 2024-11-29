@@ -1,4 +1,9 @@
-// navbar toggler
+// Sticky Header
+.sticky-header {
+  @apply sticky top-0 z-[1000] bg-white/80 backdrop-blur-md shadow-md border-b border-black/10 transition-all;
+}
+
+// Navbar Toggler
 input#nav-toggle:checked ~ label#show-button {
   @apply hidden;
 }
@@ -11,13 +16,13 @@ input#nav-toggle:checked ~ #nav-menu {
   @apply block md:flex;
 }
 
-// navbar items
+// Navbar Items
 .navbar {
   @apply relative flex max-w-[1260px] flex-wrap items-center justify-between;
 }
 
 .navbar-brand img {
-  @apply h-auto max-w-[170px] sm:h-auto sm:max-w-full #{!important};
+  @apply h-auto max-w-[170px];
 }
 
 .navbar-nav {
@@ -32,8 +37,16 @@ input#nav-toggle:checked ~ #nav-menu {
   @apply p-3 text-lg font-semibold text-dark transition hover:text-primary md:p-4;
 }
 
+.nav-dropdown {
+  @apply relative;
+}
+
 .nav-dropdown-list {
-  @apply z-10 rounded-lg bg-white px-6 py-3 shadow transition;
+  @apply absolute top-full left-0 z-10 min-w-[200px] bg-white/95 shadow-lg rounded-lg overflow-hidden opacity-0 invisible translate-y-[-10px] transition-all;
+}
+
+.nav-dropdown:hover .nav-dropdown-list {
+  @apply opacity-100 visible translate-y-0;
 }
 
 .nav-dropdown-item {
@@ -41,18 +54,21 @@ input#nav-toggle:checked ~ #nav-menu {
 }
 
 .nav-dropdown-link {
-  @apply block min-w-[150px] py-1 text-[17px] font-semibold text-dark transition hover:text-primary;
+  @apply block py-1 min-w-[150px] text-[17px] font-semibold text-dark transition hover:text-primary hover:bg-gray-100;
 }
 
-// search style
+// Search Style
 .search-modal {
   @apply invisible absolute top-0 left-0 right-0 z-10 h-10 bg-white opacity-0 transition md:h-full;
+
   .form-input {
     @apply h-full w-full border-0 text-lg;
   }
+
   .search-close {
     @apply absolute top-1/2 right-2 -translate-y-1/2 p-3 text-h4;
   }
+
   &.open {
     @apply visible opacity-100;
   }

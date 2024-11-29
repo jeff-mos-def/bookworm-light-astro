@@ -18,13 +18,14 @@ export interface NavigationLink {
 const { main }: { main: NavigationLink[] } = menu;
 ---
 
-<header class="header pt-6">
+<header class="sticky-header">
   <nav class="navbar container">
-    <!-- logo -->
+    <!-- Logo -->
     <div class="order-0">
       <Logo />
     </div>
-    <!-- navbar toggler -->
+
+    <!-- Navbar Toggler -->
     <input id="nav-toggle" type="checkbox" class="hidden" />
     <label
       id="show-button"
@@ -48,8 +49,8 @@ const { main }: { main: NavigationLink[] } = menu;
           transform="rotate(45 10 10)"></polygon>
       </svg>
     </label>
-    <!-- /navbar toggler -->
 
+    <!-- Navbar Links -->
     <ul
       id="nav-menu"
       class="navbar-nav order-3 hidden w-full md:order-1 md:flex md:w-auto"
@@ -86,12 +87,14 @@ const { main }: { main: NavigationLink[] } = menu;
         ))
       }
     </ul>
+
+    <!-- Search Icon -->
     <div class="order-1 ml-auto flex md:order-2 md:ml-0">
       <a
         class="mr-4 inline-block cursor-pointer p-2 text-xl text-dark transition hover:text-primary md:mr-0"
         href="/search"
-        title="seach"
-        aria-label="seach"
+        title="search"
+        aria-label="search"
       >
         <IoSearch />
       </a>
